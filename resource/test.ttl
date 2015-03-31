@@ -1,0 +1,48 @@
+@prefix ex: <http://ex.example/#> .
+@prefix foaf: <http://xmlns.com/foaf/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .# shapes (Turtle)
+ex:IssueShape a sh:Shape ;
+   sh:property [
+       sh:predicate ex:state ;
+       sh:allowedValue ex:unassigned , ex:assigned ;
+       sh:minCount 1 ; sh:maxCount 1
+   ] ;
+   sh:inverseProperty [
+       sh:predicate ex:reportedIssue ;
+       sh:valueShape ex:UserShape ;
+       sh:minCount 1 ; sh:maxCount 1
+   ] .ex:UserShape a sh:Shape ;
+   sh:property [
+       sh:predicate foaf:name ;
+       sh:valueType xsd:string ;
+       sh:minCount 1 ; sh:maxCount 1
+   ] ;
+   sh:property [
+       sh:predicate foaf:mbox ;
+       sh:nodeType sh:IRI ;
+       sh:minCount 1
+   ] .
+
+   ex:Issue1 a ex:Issue ;
+       sh:nodeShape ex:IssueShape ;
+       ex:state        ex:unassigned ;
+       .
+
+   ex:User2 a foaf:Person ;
+       sh:nodeShape ex:UserShape ;
+       foaf:name       "Bob Smith", "Robert Smith" ;
+       ex:reportedIssue ex:Issue1 ;
+       foaf:mbox       <mailto:bob@example.org> ;
+       foaf:mbox       <mailto:rs@example.org> .
+
+   ex:Issue3 a ex:IssueShape ;
+       sh:nodeShape ex:IssueShape ;
+       ex:state        ex:unsinged ;
+       ex:reportedBy   ex:User4 .
+
+   ex:User4 a foaf:Person ;
+       sh:nodeShape ex:UserShape ;
+       foaf:name       "Bob Smith", "Robert Smith" ;
+       foaf:mbox       <mailto:bob@example.org> ;
+       foaf:mbox       <mailto:rs@example.org> .
